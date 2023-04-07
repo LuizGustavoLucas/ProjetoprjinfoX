@@ -196,9 +196,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void subMenuSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuSairActionPerformed
         // exibe uma caixa de dialógo.
+        
         int sair = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja sair?","Atenção",JOptionPane.YES_NO_OPTION);
         if (sair == JOptionPane.YES_OPTION){
-            System.exit(0);
+           System.exit(0);
         }
     }//GEN-LAST:event_subMenuSairActionPerformed
 
