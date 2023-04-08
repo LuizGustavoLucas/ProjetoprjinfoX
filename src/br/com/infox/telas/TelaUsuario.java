@@ -66,7 +66,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(5, txtSenha.getText());
             pst.setString(6, jComboBoxPerfil.getSelectedItem().toString());
             //validação dos campos obrigatórios
-            if ((txtUserID.getText().isEmpty())||(txtUsuario.getText().isEmpty())||(txtUsuarioLogin.getText().isEmpty())||(txtSenha.getText().isEmpty())) {
+            if ((txtUserID.getText().isEmpty()) || (txtUsuario.getText().isEmpty()) || (txtUsuarioLogin.getText().isEmpty()) || (txtSenha.getText().isEmpty())) {
                 JOptionPane.showMessageDialog(null, "PREENCHA TODOS OS CAMPOS OBRIGATÓRIOS", "* PREENCHIMENTO OBRIGATÓRIO", JOptionPane.ERROR_MESSAGE);
 
             } else {
@@ -85,13 +85,45 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     }
 
+    //criando o método para alterar dados do usuário
+    private void alterar() {
+        String sql = "update tbusuarios set usuario=?, foneuser=?, loginuser=?, senhauser=?, perfil=? where iduser=?";
+        try {
+
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUsuario.getText());
+            pst.setString(2, txtFoneUser.getText());
+            pst.setString(3, txtUsuarioLogin.getText());
+            pst.setString(4, txtSenha.getText());
+            pst.setString(5, jComboBoxPerfil.getSelectedItem().toString());
+            pst.setString(6, txtUserID.getText());
+//a linha abaixo atualiza a tabela usuário com os dados do formulário
+            if ((txtUserID.getText().isEmpty()) || (txtUsuario.getText().isEmpty()) || (txtUsuarioLogin.getText().isEmpty()) || (txtSenha.getText().isEmpty())) {
+                JOptionPane.showMessageDialog(null, "PREENCHA TODOS OS CAMPOS OBRIGATÓRIOS", "PREENCHIMENTO OBRIGATÓRIO", JOptionPane.ERROR_MESSAGE);
+
+            } else {
+
+                //a linha abaixo atualiza a tabela de usuarios com os dados do formulário
+                //a estrutura abaix é para confirmar atualização no banco de dados
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Dados do usuário alterado com Sucesso!", "ATUALIZADO", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }
+
     private void limparCampos() {
         txtFoneUser.setText("");
         txtSenha.setText("");
         //txtUserID.setText("");
         txtUsuario.setText("");
         txtUsuarioLogin.setText("");
-        jComboBoxPerfil.setSelectedItem("");
+        //jComboBoxPerfil.setSelectedItem("");
     }
 
     /**
@@ -119,6 +151,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnPesquisar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         txtSenha = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -128,23 +161,23 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         lblID.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblID.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblID.setText("id");
+        lblID.setText("* id");
 
         lblNome.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblNome.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblNome.setText("Nome");
+        lblNome.setText("* Nome");
 
         lblLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblLogin.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblLogin.setText("Login");
+        lblLogin.setText("* Login");
 
         lblSenha.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblSenha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblSenha.setText("Senha");
+        lblSenha.setText("* Senha");
 
         lblPerfil.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblPerfil.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPerfil.setText("Perfil");
+        lblPerfil.setText("* Perfil");
 
         jComboBoxPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "admin", "usuario" }));
 
@@ -168,6 +201,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnAtualizar.setToolTipText("Atualizar");
         btnAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtualizar.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
 
         btnPesquisar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/pesquisar.png"))); // NOI18N
@@ -186,6 +224,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExcluir.setPreferredSize(new java.awt.Dimension(80, 80));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 51, 0));
+        jLabel1.setText("* Campos obrigatórios");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -198,24 +240,29 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     .addComponent(lblID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jComboBoxPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtUsuarioLogin))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSenha))))
-                    .addComponent(txtFoneUser)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtUserID, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(185, 185, 185))
+                        .addComponent(txtUserID, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(319, 319, 319)
+                        .addComponent(jLabel1)
+                        .addGap(154, 154, 154))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtUsuario)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jComboBoxPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtUsuarioLogin))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtSenha))))
+                            .addComponent(txtFoneUser, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(300, 300, 300))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(93, 93, 93)
                 .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,7 +289,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblFone, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtUserID, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtUserID, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -262,7 +311,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBoxPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,6 +338,13 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        // chamando o método alterar
+        alterar();
+        limparCampos();
+        txtUserID.setText("");
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
@@ -296,6 +352,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JComboBox<String> jComboBoxPerfil;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblFone;
     private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblLogin;
