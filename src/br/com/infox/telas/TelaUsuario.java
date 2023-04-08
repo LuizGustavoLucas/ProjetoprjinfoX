@@ -8,18 +8,15 @@ package br.com.infox.telas;
  *
  * @author Lucas-
  */
-
 import java.sql.*;
 import br.com.infox.dal.ModuloConexao;
 import javax.swing.JOptionPane;
 
-
 public class TelaUsuario extends javax.swing.JInternalFrame {
-    
+
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    
 
     /**
      * Creates new form TelaUsuario
@@ -27,30 +24,74 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     public TelaUsuario() {
         initComponents();
         conexao = ModuloConexao.conector();
-        
+
     }
-    
-    private void consultar(){
+
+    //metodo para consultar usuários
+    private void consultar() {
         String sql = "select * from tbusuarios where iduser = ?";
         try {
-            pst=conexao.prepareStatement(sql);
-            pst.setString(1,txtUserID.getText());
-            rs=pst.executeQuery();
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUserID.getText());
+            rs = pst.executeQuery();
             if (rs.next()) {
                 txtUsuario.setText(rs.getString(2));
                 txtFoneUser.setText(rs.getString(3));
-                txtUusarioLogin.setText(rs.getString(4));
+                txtUsuarioLogin.setText(rs.getString(4));
                 txtSenha.setText(rs.getString(5));
                 //a linha abaixo se refere ao comboBox
-                jComboBoxPerfil.setSelectedItem(rs.getString(6));                
-                
+                jComboBoxPerfil.setSelectedItem(rs.getString(6));
+
             } else {
-                JOptionPane.showMessageDialog(null,"Usuário não cadastrado!", "NÃO EXISTE NA BASE DE DADOS", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!", "NÃO EXISTE NA BASE DE DADOS", JOptionPane.ERROR_MESSAGE);
+                limparCampos();
             }
-            
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
         }
+
+    }
+
+    //metódo para adicionar usuários
+    private void adicionar() {
+
+        String sql = "insert into tbusuarios (iduser, usuario, foneuser, loginuser, senhauser, perfil) values(?,?,?,?,?,?)";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUserID.getText());
+            pst.setString(2, txtUsuario.getText());
+            pst.setString(3, txtFoneUser.getText());
+            pst.setString(4, txtUsuarioLogin.getText());
+            pst.setString(5, txtSenha.getText());
+            pst.setString(6, jComboBoxPerfil.getSelectedItem().toString());
+            //validação dos campos obrigatórios
+            if ((txtUserID.getText().isEmpty())||(txtUsuario.getText().isEmpty())||(txtUsuarioLogin.getText().isEmpty())||(txtSenha.getText().isEmpty())) {
+                JOptionPane.showMessageDialog(null, "PREENCHA TODOS OS CAMPOS OBRIGATÓRIOS", "* PREENCHIMENTO OBRIGATÓRIO", JOptionPane.ERROR_MESSAGE);
+
+            } else {
+
+                //a linha abaixo atualiza a tabela de usuarios com os dados do formulário
+                //a estrutura abaix é para confirmar a inserçao no banco de dados
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário adicionado com Sucesso!", "PARABÉNS", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }
+
+    private void limparCampos() {
+        txtFoneUser.setText("");
+        txtSenha.setText("");
+        //txtUserID.setText("");
+        txtUsuario.setText("");
+        txtUsuarioLogin.setText("");
+        jComboBoxPerfil.setSelectedItem("");
     }
 
     /**
@@ -69,7 +110,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         lblPerfil = new javax.swing.JLabel();
         txtUserID = new javax.swing.JTextField();
         txtUsuario = new javax.swing.JTextField();
-        txtUusarioLogin = new javax.swing.JTextField();
+        txtUsuarioLogin = new javax.swing.JTextField();
         jComboBoxPerfil = new javax.swing.JComboBox<>();
         lblFone = new javax.swing.JLabel();
         txtFoneUser = new javax.swing.JTextField();
@@ -116,6 +157,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnAdicionar.setToolTipText("Adicionar");
         btnAdicionar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdicionar.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
 
         btnAtualizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAtualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/atualizar.png"))); // NOI18N
@@ -160,7 +206,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtUusarioLogin))
+                                .addComponent(txtUsuarioLogin))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -206,7 +252,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUusarioLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtUsuarioLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,6 +281,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         consultar();
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+        // chamando o método adicionar
+        adicionar();
+        limparCampos();
+        txtUserID.setText("");
+
+    }//GEN-LAST:event_btnAdicionarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
@@ -252,6 +306,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtSenha;
     private javax.swing.JTextField txtUserID;
     private javax.swing.JTextField txtUsuario;
-    private javax.swing.JTextField txtUusarioLogin;
+    private javax.swing.JTextField txtUsuarioLogin;
     // End of variables declaration//GEN-END:variables
 }

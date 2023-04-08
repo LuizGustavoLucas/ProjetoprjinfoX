@@ -49,7 +49,7 @@
                           <Group type="102" attributes="0">
                               <Component id="lblLogin" min="-2" pref="70" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtUusarioLogin" max="32767" attributes="0"/>
+                              <Component id="txtUsuarioLogin" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="lblSenha" min="-2" pref="70" max="-2" attributes="0"/>
@@ -104,7 +104,7 @@
                       <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblLogin" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
-                          <Component id="txtUusarioLogin" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
+                          <Component id="txtUsuarioLogin" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -182,7 +182,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtUsuario">
     </Component>
-    <Component class="javax.swing.JTextField" name="txtUusarioLogin">
+    <Component class="javax.swing.JTextField" name="txtUsuarioLogin">
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBoxPerfil">
       <Properties>
@@ -224,6 +224,9 @@
           <Dimension value="[80, 80]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAdicionarActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAtualizar">
       <Properties>

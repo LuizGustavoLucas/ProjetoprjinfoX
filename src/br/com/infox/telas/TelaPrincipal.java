@@ -75,7 +75,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/imagens/xLogo.png"))); // NOI18N
 
-        lblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 40)); // NOI18N
+        lblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblUsuario.setText("Usuário:");
 
