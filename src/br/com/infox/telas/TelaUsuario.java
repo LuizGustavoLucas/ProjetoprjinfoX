@@ -109,12 +109,35 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 if (adicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Dados do usuário alterado com Sucesso!", "ATUALIZADO", JOptionPane.INFORMATION_MESSAGE);
                 }
+                limparCampos();
+                txtUserID.setText("");
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
 
+    }
+    
+    //método responsável pela remoção do usuário deletar usuário do banco
+    private void removerUsuario(){
+        int confirma = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja excluir?","ATENÇÃO",JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION){
+            String sql = "delete from tbusuarios where iduser=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtUserID.getText());
+                int apagado = pst.executeUpdate();
+                if (apagado >0){
+                    JOptionPane.showMessageDialog(null, "Usuário removido com Sucesso!", "EXCLUÍDO", JOptionPane.INFORMATION_MESSAGE);
+                    limparCampos();
+                    txtUserID.setText("");
+                }
+                                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,e);
+            }
+        }
     }
 
     private void limparCampos() {
@@ -223,6 +246,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnExcluir.setToolTipText("Excluir");
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExcluir.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 51, 0));
@@ -341,9 +369,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
         // chamando o método alterar
         alterar();
-        limparCampos();
-        txtUserID.setText("");
+
     }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // chamando o método remover
+        removerUsuario();
+
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
