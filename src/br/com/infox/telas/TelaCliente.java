@@ -4,17 +4,60 @@
  */
 package br.com.infox.telas;
 
+import java.sql.*;
+import br.com.infox.dal.ModuloConexao;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Lucas-
  */
 public class TelaCliente extends javax.swing.JInternalFrame {
 
+    Connection conexao = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
     /**
      * Creates new form TelaCliente
      */
     public TelaCliente() {
         initComponents();
+        conexao = ModuloConexao.conector();
+    }
+
+    //método para adicionar cliente
+    private void adicionar() {
+        String sql = "insert into tbclientes (nomecliente, enderecocliente, fonecliente, emailcliente) values (?, ?, ?, ?)";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtNome.getText());
+            pst.setString(2, txtEndereco.getText());
+            pst.setString(3, txtTelefone.getText());
+            pst.setString(4, txtEmail.getText());
+            //validação de campos
+            if ((txtNome.getText().isEmpty()) || (txtTelefone.getText().isEmpty())) {
+                JOptionPane.showMessageDialog(null, "PREENCHA OS CAMPOS OBRIGATÓRIOS", "* PREENCHIMENTO OBRIGATÓRIO", JOptionPane.ERROR_MESSAGE);
+            } else {
+                //a linha abaixo cadastra o cliente no banco
+                //a estrutura abaixo é para confirmar a insercao no banco
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com Sucesso!", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+                    limparCampos();
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void limparCampos() {
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtTelefone.setText("");
+        txtEmail.setText("");
     }
 
     /**
@@ -66,7 +109,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         lblTelefone.setText("* Telefone");
 
         lblEmail.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblEmail.setText("* Email");
+        lblEmail.setText("Email");
 
         btnAdicionarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAdicionarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/infox/icones/adicionar.png"))); // NOI18N
@@ -226,18 +269,19 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarClienteActionPerformed
-        
-        
+//método para adicionar clientes
+        adicionar();
+
     }//GEN-LAST:event_btnAdicionarClienteActionPerformed
 
     private void btnAtualizarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarClienteActionPerformed
-        
-        
+
+
     }//GEN-LAST:event_btnAtualizarClienteActionPerformed
 
     private void btnExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirClienteActionPerformed
-        
-        
+
+
     }//GEN-LAST:event_btnExcluirClienteActionPerformed
 
 
